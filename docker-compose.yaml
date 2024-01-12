@@ -1,0 +1,26 @@
+# this file is here to facilitate development/testing
+# $ docker compose up -d --build --force-recreate
+
+services:
+  postgres:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+
+  backup:
+    build:
+      context: .
+    environment:
+      SCHEDULE: ''     # optional
+      BACKUP_KEEP_DAYS: 7     # optional
+      PASSPHRASE: passphrase  # optional
+      GCS_BUCKET: dev-postgresql-backup
+      GCS_PREFIX: backup
+      GCS_SERVICE_ACCOUNT:
+      POSTGRES_HOST: postgres
+      POSTGRES_DATABASE: postgres
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
