@@ -5,7 +5,7 @@ set -o pipefail
 
 source ./env.sh
 
-gcs_uri_base="gcs://${GCS_BUCKET}/${GCS_PREFIX}"
+gcs_uri_base="gs://${GCS_BUCKET}/${GCS_PREFIX}"
 
 if [ -z "$PASSPHRASE" ]; then
   file_type=".dump"
@@ -19,14 +19,14 @@ if [ $# -eq 1 ]; then
 else
   echo "Finding latest backup..."
   key_suffix=$(
-    gsutil ls "${gcs_uri_base}/${POSTGRES_DATABASE}" \
+    gsutil $GCS_ARGS ls "${gcs_uri_base}" \
       | sort \
       | tail -n 1
   )
 fi
 
 echo "Fetching backup from GCS..."
-gsutil cp "${key_suffix}" .
+gsutil $GCS_ARGS cp "${key_suffix}" db.dump.gpg
 
 if [ -n "$PASSPHRASE" ]; then
   echo "Decrypting backup..."
