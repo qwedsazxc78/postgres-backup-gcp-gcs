@@ -21,13 +21,12 @@ else
   key_suffix=$(
     gsutil ls "${gcs_uri_base}/${POSTGRES_DATABASE}" \
       | sort \
-      | tail -n 1 \
-      | awk '{ print $4 }'
+      | tail -n 1
   )
 fi
 
 echo "Fetching backup from GCS..."
-gsutil cp "${gcs_uri_base}/${key_suffix}" "db${file_type}"
+gsutil cp "${key_suffix}" .
 
 if [ -n "$PASSPHRASE" ]; then
   echo "Decrypting backup..."
