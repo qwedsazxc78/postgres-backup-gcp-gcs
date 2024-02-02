@@ -19,7 +19,7 @@ if [ $# -eq 1 ]; then
 else
   echo "Finding latest backup..."
   key_suffix=$(
-    gcloud $gcloud_args gcs ls "${gcs_uri_base}/${POSTGRES_DATABASE}" \
+    gsutil $GCS_ARGS ls "${gcs_uri_base}/${POSTGRES_DATABASE}" \
       | sort \
       | tail -n 1 \
       | awk '{ print $4 }'
@@ -27,7 +27,7 @@ else
 fi
 
 echo "Fetching backup from GCS..."
-gcloud $gcloud_args gcs cp "${gcs_uri_base}/${key_suffix}" "db${file_type}"
+gsutil $GCS_ARGS cp "${gcs_uri_base}/${key_suffix}" "db${file_type}"
 
 if [ -n "$PASSPHRASE" ]; then
   echo "Decrypting backup..."
